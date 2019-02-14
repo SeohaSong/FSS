@@ -1,2 +1,2 @@
 
-from .rnn import Rec
+from .rnn import RecurrentNeuralNetwork
