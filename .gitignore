@@ -1,0 +1,15 @@
+
+*.Trash-1000
+*.DS_Store
+
+*.ipynb_checkpoints
+*__pycache__
+*.vscode
+*nohup.out
+
+env/*
+data/*
+!env/.gitkeep
+!data/.gitkeep
+
+**/Untitled.ipynb
