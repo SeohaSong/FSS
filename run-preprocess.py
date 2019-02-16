@@ -12,29 +12,22 @@ def make_datasets(raws_path, path, sample_n):
     
     def _get_pair(df):
         n = len(df)
-        test_n = int(n//5)
+        test_n = n//2
         mask = np.array([False]*n)
         mask[np.random.choice(n, test_n, replace=False)] = True
         tr_df, te_df = df[np.invert(mask)], df[mask]
-        return tr_df, te_df
-
-    def _transform(keyword, tr_df, te_df):
-        cols = [v for v in tr_df.columns[1:] if re.compile(keyword).search(v)]
-        if not cols:
-            return tr_df, te_df
-        tr_xs, te_xs = np.array(tr_df[cols]), np.array(te_df[cols])
-        pca = PCA()
-        pca.fit(tr_xs)
-        tr_xs, te_xs = pca.transform(tr_xs), pca.transform(te_xs)
-        tr_df[cols], te_df[cols] = tr_xs, te_xs
         return tr_df, te_df
 
     def get_dataset(opt, term, idx):
         nonlocal raws_path
         np.random.seed(idx)
         
-        filepath = os.path.join(raws_path, 'time%d') % term
+        filepath = os.path.join(raws_path, 'time4')
         df = pd.read_pickle(filepath)
+
+        keywords = ['Target']+['before_%d' % (i+1) for i in range(term)]
+        p = re.compile('|'.join(keywords))
+        df = df[[v for v in df.columns if p.search(v)]]
         
         if opt == 'base':
             p = re.compile(r'minwon|news')
@@ -61,9 +54,6 @@ def make_datasets(raws_path, path, sample_n):
         bools = tr_df['Target'] == 0
         up_weight = sum(bools)//sum(~bools)
         tr_df = pd.concat([tr_df[bools]]+[tr_df[~bools]]*up_weight)
-        
-        tr_df, te_df = _transform(r'_news_topic', tr_df, te_df)
-        tr_df, te_df = _transform(r'_minwon_topic', tr_df, te_df)
 
         sys.stdout.write('\r%s %s %03d' % (opt, filepath, idx))
         return tr_df, te_df
@@ -95,4 +85,4 @@ def make_datasets(raws_path, path, sample_n):
 if __name__ == "__main__":
 
     raws_path = os.path.join('data', 'raws')
-    make_datasets(raws_path, 'data', 50)
+    make_datasets(raws_path, 'data', 100)
