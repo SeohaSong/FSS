@@ -84,7 +84,7 @@ def get_scores_map(name, opt, term):
 if __name__ == "__main__":
 
     names = ['nn', 'rf', 'lr']
-    opts = ['base', 'ours']
+    opts = ['base', 'ours', 'text']
     terms = [1, 2, 3, 4]
     total_score_map = {}
 
