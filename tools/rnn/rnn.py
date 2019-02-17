@@ -24,16 +24,16 @@ class RecurrentNeuralNetwork():
             t = tf.layers.dense(t, 1)
             return t
 
-        os.environ["CUDA_VISIBLE_DEVICES"]="1"
+        os.environ["CUDA_VISIBLE_DEVICES"] = "1"
         os.environ['TF_CPP_MIN_LOG_LEVEL'] = "3"
 
-        if opt == 'ours':
+        if opt == 'base':
+            argses = [[0, 27]]
+        elif opt == 'ours':
             argses = [[0, 27], [27, 29], [29, 59], [59, 109], [109, 159],
                       [159, 209]]
         elif opt == 'text':
             argses = [[0, 2], [2, 32], [32, 82], [82, 132], [132, 182]]
-        elif opt == 'base':
-            argses = [[0, 27]]
         dim_n = argses[-1][-1]
 
         tf.reset_default_graph()
