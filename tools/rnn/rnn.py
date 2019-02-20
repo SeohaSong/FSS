@@ -14,13 +14,13 @@ class RecurrentNeuralNetwork():
 
         def get_lstm(xs, start, end):
             xs = xs[..., start:end]
-            dim_size = end-start
+            dim_size = max(2, (end-start)//4)
             with tf.variable_scope(str(start)):
                 rnn_cell = tf.nn.rnn_cell.BasicLSTMCell(dim_size)                
                 outputs, _ = tf.nn.dynamic_rnn(rnn_cell, xs, dtype=tf.float32)
-            t = outputs[:, -1, :]
+            t = tf.reshape(outputs, [-1, dim_size*outputs.shape[1]])
             t = tf.layers.dense(t, max(2, dim_size//2))
-            t = tf.layers.dense(t, max(2, dim_size//4))
+            t = tf.layers.dense(t, max(1, dim_size//4))
             t = tf.layers.dense(t, 1)
             return t
 
@@ -30,7 +30,7 @@ class RecurrentNeuralNetwork():
         if opt == 'base':
             argses = [[0, 27]]
         elif opt == 'ours':
-            argses = [[0, 27], [27, 29], [29, 59], [59, 109], [109, 159],
+            argses = [[0, 2], [2, 29], [29, 59], [59, 109], [109, 159],
                       [159, 209]]
         elif opt == 'text':
             argses = [[0, 2], [2, 32], [32, 82], [82, 132], [132, 182]]

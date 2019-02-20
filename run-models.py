@@ -47,8 +47,8 @@ def get_scores_map(name, opt, term):
         model = RecurrentNeuralNetwork( 
             opt, term,
             epoch_n=150,
-            learning_rate=0.01,
-            regularization_rate=0.002
+            learning_rate=0.005,
+            regularization_rate=0.001
         )
         return model
 
@@ -86,8 +86,8 @@ if __name__ == "__main__":
     names = ['nn', 'rf', 'lr']
     opts = ['base', 'ours', 'text']
     terms = [1, 2, 3, 4]
-    total_score_map = {}
 
+    total_score_map = {}
     for name in names:
         print(name)
         for opt in opts:
